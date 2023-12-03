@@ -1,3 +1,6 @@
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+
 abstract class Word_Analysis {
 
     protected String substring;
@@ -16,11 +19,11 @@ abstract class Word_Analysis {
 
     abstract void Line_Analysis(String line);
 
+    public int getWordCount() {return word_count;}
+
 }
 
 class StartsWith extends Word_Analysis {
-
-    private int word_count;
 
     public StartsWith(String substring, boolean most_common, boolean min_length, boolean max_length) {
         super(substring, most_common, min_length, max_length);
@@ -29,43 +32,33 @@ class StartsWith extends Word_Analysis {
     public void Line_Analysis(String line) {
 
         String[] words;
-        int number_of_words,
-                number_of_threads,
-                index = 0;
-        StartsWithThread sw_thread;
+        final int max_num_threads = 10;
 
         line = line.replaceAll("\\.", "");
         line = line.toLowerCase();
         words = line.split(" ");
 
-        number_of_words = words.length;
+        ExecutorService exeThreadPool = Executors.newFixedThreadPool(max_num_threads);
 
-        while(0 < number_of_words) {
-            number_of_threads = Math.min(10, number_of_words);
-            sw_thread = new StartsWithThread(words[index]);
-
-            for(int j=1; j <= number_of_threads; j++ ) {
-                sw_thread = new StartsWithThread(words[index]);
-                index++;
-                sw_thread.start();
-            }
-
-            number_of_words -= number_of_threads;
-            sw_thread.join();
+        for (String word : words) {
+            Thread sw_thread = new StartsWithThread(word);
+            exeThreadPool.execute(sw_thread);
         }
+        exeThreadPool.shutdown();
+        while(!exeThreadPool.isTerminated());
+
     }
 
     public class StartsWithThread extends Thread {
 
-        private String word;
+        private final String word;
 
         public StartsWithThread(String word) {this.word = word;}
 
         public void run() {
 
             if(word.startsWith(substring)) {
-
-
+                word_count++;
 
             }
         }
