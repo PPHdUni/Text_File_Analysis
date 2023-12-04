@@ -1,3 +1,7 @@
+package textFileAnalysisCode;
+
+import java.util.ArrayList;
+
 public class Text_Analysis {
 
     public static void main (String[] args) {
