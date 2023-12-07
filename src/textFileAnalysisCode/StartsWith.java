@@ -5,8 +5,8 @@ import java.util.concurrent.Executors;
 
 public class StartsWith extends Word_Analysis {
 
-    public StartsWith(String substring, boolean most_common, boolean min_length, boolean max_length) {
-        super(substring, most_common, min_length, max_length);
+    public StartsWith(String substring, boolean most_common, boolean length_analysis) {
+        super(substring, most_common, length_analysis);
     }
 
     public void Line_Analysis(String line) {
@@ -42,7 +42,21 @@ public class StartsWith extends Word_Analysis {
             if (word.startsWith(substring)) {
                 word_count++;
 
+                if(length_analysis) {
+                    synchronized (lock1) {
+                        LengthAnalysis(word);
+                    }
+                }
+
+                if(most_common) {
+                    synchronized (lock2) {
+                        CommonWordAnalysis(word);
+                    }
+                }
+
             }
         }
+
+
     }
 }

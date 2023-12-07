@@ -17,7 +17,7 @@ public class AnalysisTests {
 
     @BeforeAll
     static void preparation() {
-        Word_Analysis analysis = new StartsWith("fu", false, false, false);
+        Word_Analysis analysis = new StartsWith("fu", false, false);
     }
 
     @Test
