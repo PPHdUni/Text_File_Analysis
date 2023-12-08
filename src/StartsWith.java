@@ -1,5 +1,3 @@
-package textFileAnalysisCode;
-
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -40,16 +38,19 @@ public class StartsWith extends Word_Analysis {
         public void run() {
 
             if (word.startsWith(substring)) {
-                word_count++;
+
+                synchronized (lock1) {
+                    word_count++;
+                }
 
                 if(length_analysis) {
-                    synchronized (lock1) {
+                    synchronized (lock2) {
                         LengthAnalysis(word);
                     }
                 }
 
                 if(most_common) {
-                    synchronized (lock2) {
+                    synchronized (lock3) {
                         CommonWordAnalysis(word);
                     }
                 }

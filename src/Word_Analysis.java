@@ -1,16 +1,13 @@
-package textFileAnalysisCode;
-
+import java.util.*;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 public abstract class Word_Analysis {
 
     protected String substring;
     protected boolean most_common, length_analysis;
     protected int word_count;
-    protected final Object lock1, lock2;
+    protected final Object lock1, lock2, lock3;
     protected ArrayList<String> min_length_words,max_length_words;
     protected HashMap<String,Integer> common_words_map;
 
@@ -24,6 +21,7 @@ public abstract class Word_Analysis {
 
         lock1 = new Object();
         lock2 = new Object();
+        lock3 = new Object();
 
         min_length_words = new ArrayList<>();
         max_length_words = new ArrayList<>();
@@ -32,23 +30,48 @@ public abstract class Word_Analysis {
 
     public int getWordCount() {return word_count;}
 
-    public  ArrayList<String> getMinLengthArray() {return min_length_words;}
+    public ArrayList<String> getMinLengthArray() {return min_length_words;}
 
-    public  ArrayList<String> getMaxLengthArray() {return max_length_words;}
+    public ArrayList<String> getMaxLengthArray() {return max_length_words;}
 
-    public  HashMap<String,Integer> getCommonWordsMap() {return common_words_map;}
+    public HashMap<String,Integer> getCommonWordsMap() {return common_words_map;}
+
+    public ArrayList<String> getCommonWordsList() {
+
+        ArrayList<String> common_words_array = new ArrayList<>();
+        Set<String> keyList = common_words_map.keySet();
+
+        for(String key : keyList) {
+            if(common_words_array.isEmpty()) {
+                common_words_array.add(key);
+            }
+
+            if(common_words_map.get(key)==common_words_map.get(common_words_array.get(0)) &&
+                    !common_words_array.contains(key)) {
+                common_words_array.add(key);
+            }
+
+            if(common_words_map.get(key)>common_words_map.get(common_words_array.get(0))) {
+                common_words_array.clear();
+                common_words_array.add(key);
+            }
+        }
+
+        return common_words_array;
+    }
 
     public abstract void Line_Analysis(String line);
 
     protected void LengthAnalysis(String word) {
 
-        System.out.println("Début du sommeil");
-        try {
-            Thread.sleep(500);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-        System.out.println("Fin du sommeil");
+//        System.out.println("Début du sommeil");
+//        try {
+//            Thread.sleep(2000);
+//
+//        } catch (InterruptedException e) {
+//            e.printStackTrace();
+//        }
+//        System.out.println("Fin du sommeil");
 
         if(min_length_words.isEmpty() && max_length_words.isEmpty()) {
             min_length_words.add(word);
