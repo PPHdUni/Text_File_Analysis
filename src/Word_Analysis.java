@@ -1,6 +1,8 @@
 import java.util.*;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public abstract class Word_Analysis {
 
@@ -27,6 +29,8 @@ public abstract class Word_Analysis {
         max_length_words = new ArrayList<>();
         common_words_map = new HashMap<>();
     }
+
+    public abstract boolean isValid(String word);
 
     public int getWordCount() {return word_count;}
 
@@ -60,7 +64,25 @@ public abstract class Word_Analysis {
         return common_words_array;
     }
 
-    public abstract void Line_Analysis(String line);
+    public void Line_Analysis(String line) {
+
+        String[] words;
+        final int max_num_threads = 10;
+
+        line = line.replaceAll("\\.", "");
+        line = line.toLowerCase();
+        words = line.split(" ");
+
+        ExecutorService exeThreadPool = Executors.newFixedThreadPool(max_num_threads);
+
+        for (String word : words) {
+            Thread thread = new AnalysisThread(word);
+            exeThreadPool.execute(thread);
+        }
+        exeThreadPool.shutdown();
+        while (!exeThreadPool.isTerminated()) ;
+
+    }
 
     protected void LengthAnalysis(String word) {
 
@@ -108,16 +130,36 @@ public abstract class Word_Analysis {
 
     }
 
-}
+    public class AnalysisThread extends Thread {
 
-class EndsWith extends Word_Analysis {
+        private final String word;
 
-    public EndsWith(String substring, boolean most_common, boolean length_analysis) {
-        super(substring, most_common, length_analysis);
-    }
+        public AnalysisThread(String word) {
+            this.word = word;
+        }
 
-    public void Line_Analysis(String line) {
+        public void run() {
 
+            if (isValid(word)) {
+
+                synchronized (lock1) {
+                    word_count++;
+                }
+
+                if(length_analysis) {
+                    synchronized (lock2) {
+                        LengthAnalysis(word);
+                    }
+                }
+
+                if(most_common) {
+                    synchronized (lock3) {
+                        CommonWordAnalysis(word);
+                    }
+                }
+
+            }
+        }
 
 
     }
