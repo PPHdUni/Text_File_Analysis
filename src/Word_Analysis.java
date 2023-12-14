@@ -32,6 +32,8 @@ public abstract class Word_Analysis {
 
     public abstract boolean isValid(String word);
 
+    public abstract String toString();
+
     public int getWordCount() {return word_count;}
 
     public ArrayList<String> getMinLengthArray() {return min_length_words;}
@@ -70,7 +72,10 @@ public abstract class Word_Analysis {
         final int max_num_threads = 10;
 
         line = line.replaceAll("\\.", "");
+        line = line.replaceAll(",", "");
         line = line.toLowerCase();
+        line = line.replaceAll("n't", " not");
+        line = line.replaceAll(".’", "");
         words = line.split(" ");
 
         ExecutorService exeThreadPool = Executors.newFixedThreadPool(max_num_threads);
