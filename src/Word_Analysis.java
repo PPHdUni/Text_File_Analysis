@@ -6,16 +6,14 @@ import java.util.concurrent.Executors;
 
 public abstract class Word_Analysis {
 
-    protected String substring;
     protected boolean most_common, length_analysis;
     protected int word_count;
     protected final Object lock1, lock2, lock3;
     protected ArrayList<String> min_length_words,max_length_words;
     protected HashMap<String,Integer> common_words_map;
 
-    public Word_Analysis(String substring, boolean most_common, boolean length_analysis) {
+    public Word_Analysis(boolean most_common, boolean length_analysis) {
 
-        this.substring = substring;
         this.most_common = most_common;
         this.length_analysis = length_analysis;
 

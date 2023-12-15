@@ -18,6 +18,11 @@ public class Text_Analysis {
         commandList.add(new StartsWith("co", true, true));
         commandList.add(new EndsWith("er", true, true));
 
+        ArrayList<Word_Analysis> hybridList = new ArrayList<>(Arrays.asList(
+                new StartsWith("d", true, true),
+                new EndsWith("s", true, true)));
+        commandList.add(new Hybrid(true,true,hybridList));
+
         Text_Analysis text_analysis = new Text_Analysis(commandList);
         File text_file = new File("src/analysis_test.txt");
         text_analysis.readFile(text_file);
