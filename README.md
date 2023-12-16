@@ -1,2 +1,5 @@
 # Text_File_Analysis
- Un programme servant à analyser les mots dans un fichier de texte
+Un programme fait en Java qui peut analyser et extraire des métriques sur des groupes de mots qui répondent à certains critères. Parmi les métriques, le programme peut trouver le nombre de mots qui correspondent aux critères, les moins et plus long de ces mots, ainsi que les plus communs. Parmi les critères, il y a StartsWith, qui vérifie si le mot commence par une chaîne de caractère donnée, EndsWith, qui vérifie si le mot se termine par cette chaîne et Hybrid, qui peut inclure plusieurs critères de différents types à la fois. L'analyse d'un fichier de texte se fait par le biais de commandes représentés par des classes qui sont nommées après les critères. De plus, le programme peut analyser un fichier avec plusieurs commandes en une instance, si nécessaire.
+
+Le programme utilise du multithreading pour accélerer sa vitesse. Additionnellement, le programme vient avec un fichier de tests afin d'assurer la précision et le bon fonctionnement du code.
+J'ai créer ce programme afin de me pratiquer dans des concepts de programmation plus avancées, tel que le multithreading, le développement conduit par les tests et le polymorphisme.
