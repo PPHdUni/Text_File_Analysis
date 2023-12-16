@@ -48,7 +48,7 @@ public class AnalysisTests {
     }
 
     @Test
-    void EndsWithTests() {
+    void endsWithTests() {
         analysis = new EndsWith("le", true, true);
         for (int i = 1; i <= 10; i++) {
             analysis.Line_Analysis("lame little kale apple lemur apple expendable handle unbearable expendable isle apple");
@@ -73,6 +73,39 @@ public class AnalysisTests {
             assertEquals(expect_common_list, actual_common_list, "Échec du test#1 most_common_words de EndsWith");
             assertEquals(3 * i, analysis.getCommonWordsMap().get("apple"), "Échec du test#2 most_common_words de EndsWith");
             assertEquals(2 * i, analysis.getCommonWordsMap().get("expendable"), "Échec du test#3 most_common_words de EndsWith");
+        }
+    }
+
+    @Test
+    void hybridTests() {
+        ArrayList<Word_Analysis> hybridList = new ArrayList<>();
+        hybridList.add(new StartsWith("a",true,true));
+        hybridList.add(new EndsWith("m",true,true));
+
+        analysis = new Hybrid(true,true,hybridList);
+        for (int i = 1; i <= 10; i++) {
+            analysis.Line_Analysis("bedroom allure alarm aquarium aim alarm arm altruism alarm alarm album");
+            assertEquals(9 * i, analysis.getWordCount(), "Échec du test word_count de EndsWith");
+
+            ArrayList<String> expect_min_list = new ArrayList<>(Arrays.asList("aim", "arm"));
+            Collections.sort(expect_min_list);
+            ArrayList<String> actual_min_list = analysis.getMinLengthArray();
+            Collections.sort(actual_min_list);
+            assertEquals(expect_min_list, actual_min_list, "Échec du test min_length de Hybrid");
+
+            ArrayList<String> expect_max_list = new ArrayList<>(Arrays.asList("aquarium", "altruism"));
+            Collections.sort(expect_max_list);
+            ArrayList<String> actual_max_list = analysis.getMaxLengthArray();
+            Collections.sort(actual_max_list);
+            assertEquals(expect_max_list, actual_max_list, "Échec du test max_length de Hybrid");
+
+            ArrayList<String> expect_common_list = new ArrayList<>(Arrays.asList("alarm"));
+            Collections.sort(expect_common_list);
+            ArrayList<String> actual_common_list = analysis.getCommonWordsList();
+            Collections.sort(actual_common_list);
+            assertEquals(expect_common_list, actual_common_list, "Échec du test#1 most_common_words de Hybrid");
+            assertEquals(4 * i, analysis.getCommonWordsMap().get("alarm"), "Échec du test#2 most_common_words de Hybrid");
+            assertEquals(i, analysis.getCommonWordsMap().get("album"), "Échec du test#3 most_common_words de Hybrid");
         }
     }
 }
