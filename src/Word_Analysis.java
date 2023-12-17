@@ -12,6 +12,7 @@ public abstract class Word_Analysis {
     protected ArrayList<String> min_length_words,max_length_words;
     protected HashMap<String,Integer> common_words_map;
 
+    //Constructeur pour la classe Word_Analysis
     public Word_Analysis(boolean most_common, boolean length_analysis) {
 
         this.most_common = most_common;
@@ -32,14 +33,19 @@ public abstract class Word_Analysis {
 
     public abstract String toString();
 
+    //Retourne le nombre de mots qui répond aux critères
     public int getWordCount() {return word_count;}
 
+    //Retourne la liste des mots valides les moins longs
     public ArrayList<String> getMinLengthArray() {return min_length_words;}
 
+    //Retourne la liste des mots valides les plus longs
     public ArrayList<String> getMaxLengthArray() {return max_length_words;}
 
+    //Retourne une carte de l'occurrence des mots valides
     public HashMap<String,Integer> getCommonWordsMap() {return common_words_map;}
 
+    //Retourne la liste des mots les plus communs
     public ArrayList<String> getCommonWordsList() {
 
         ArrayList<String> common_words_array = new ArrayList<>();
@@ -64,6 +70,9 @@ public abstract class Word_Analysis {
         return common_words_array;
     }
 
+    //Cette fonction sépare une ligne (représenter par le param "line") en
+    //plusieurs mots à être vérifier par des threads.
+    //Il peut avoir un maximum de 10 threads par execution de cette fonction
     public void Line_Analysis(String line) {
 
         String[] words;
@@ -78,7 +87,7 @@ public abstract class Word_Analysis {
 
         ExecutorService exeThreadPool = Executors.newFixedThreadPool(max_num_threads);
 
-        for (String word : words) {
+        for (String word : words) { //Création des threads, qui sont limités à un nombre max de 10
             Thread thread = new AnalysisThread(word);
             exeThreadPool.execute(thread);
         }
@@ -87,40 +96,34 @@ public abstract class Word_Analysis {
 
     }
 
+    //Cette fonction détermine si un mot est plus ou moins long que ceux précédent
+    //et ajuste la liste correspondante
     protected void LengthAnalysis(String word) {
 
-//        System.out.println("Début du sommeil");
-//        try {
-//            Thread.sleep(2000);
-//
-//        } catch (InterruptedException e) {
-//            e.printStackTrace();
-//        }
-//        System.out.println("Fin du sommeil");
-
-        if(min_length_words.isEmpty() && max_length_words.isEmpty()) {
+        if(min_length_words.isEmpty() && max_length_words.isEmpty()) { //Si les listes sont vides, le mot y sont ajouté automatiquement
             min_length_words.add(word);
             max_length_words.add(word);
         }
 
-        if(word.length()==min_length_words.get(0).length() && !min_length_words.contains(word)) {
+        if(word.length()==min_length_words.get(0).length() && !min_length_words.contains(word)) { //Si le mot est aussi long que ceux dans la liste, celui-ci est seulement ajouté
             min_length_words.add(word);
         }
-        if(word.length()<min_length_words.get(0).length()) {
+        if(word.length()<min_length_words.get(0).length()) { //Si le mot est moins long que ceux dans la liste, celle-ci est réinitialiser avec le mot ajouté
             min_length_words.clear();
             min_length_words.add(word);
         }
 
-        if(word.length()==max_length_words.get(0).length() && !max_length_words.contains(word)) {
+        if(word.length()==max_length_words.get(0).length() && !max_length_words.contains(word)) { //Si le mot est aussi long que ceux dans la liste, celui-ci est seulement ajouté
             max_length_words.add(word);
         }
-        if(word.length()>max_length_words.get(0).length()) {
+        if(word.length()>max_length_words.get(0).length()) { //Si le mot est plus long que ceux dans la liste, celle-ci est réinitialiser avec le mot ajouté
             max_length_words.clear();
             max_length_words.add(word);
         }
 
     }
 
+    //Cette fonction sert à ajuster la HashMap d'occurence de mot au fur et à mesure que le programme fonctionne
     protected void CommonWordAnalysis(String word) {
 
         if(!common_words_map.containsKey(word)) {
@@ -133,6 +136,7 @@ public abstract class Word_Analysis {
 
     }
 
+    //Classe intérieur pour les threads crée par la fonction Line_Analysis
     public class AnalysisThread extends Thread {
 
         private final String word;
